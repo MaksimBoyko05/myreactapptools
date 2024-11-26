@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import Login from './pages/Login';
+import User from './pages/User';
+
+const isAuthenticated = false; // Симуляція авторизації
+
+const ProtectedRoute = ({ children }) => {
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+const DynamicUser = () => {
+  const { id } = useParams(); // Отримання параметру "id" з маршруту
+  return <User id={id} />;
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/user/:id" element={<DynamicUser />} />
+      </Routes>
+    </Router>
   );
 }
 
